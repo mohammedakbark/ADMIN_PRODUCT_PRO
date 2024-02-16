@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "172016611905",
+    "project_id": "productcarepro-bc086",
+    "storage_bucket": "productcarepro-bc086.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172016611905:android:23e11912586a9108fc0cc0",
+        "android_client_info": {
+          "package_name": "com.example.adminpanel_hardwarepro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4e7hO-crlk2xbbqal9V-vGjREEPA7sRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
