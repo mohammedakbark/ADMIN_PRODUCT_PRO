@@ -27,7 +27,7 @@ class ClaimWarrentyPage extends StatelessWidget {
           ),
           SizedBox(
             width: width * .8,
-            height: height * .5,
+            height: height * .7,
             child: ListView.separated(
                 itemBuilder: (context, index) => const SizedBox(
                       height: 20,

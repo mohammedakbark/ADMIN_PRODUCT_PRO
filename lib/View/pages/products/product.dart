@@ -2,6 +2,7 @@ import 'package:adminpanel_hardwarepro/View/Widgets/navigate_to_previouse.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/tabbar.dart';
 import 'package:adminpanel_hardwarepro/View/pages/products/add_product.dart';
 import 'package:adminpanel_hardwarepro/utils/colors.dart';
+import 'package:adminpanel_hardwarepro/utils/style.dart';
 import 'package:flutter/material.dart';
 
 class ProductPage extends StatelessWidget {
@@ -33,7 +34,7 @@ class ProductPage extends StatelessWidget {
           ),
           SizedBox(
             width: width * .5,
-            height: height * .6,
+            height: height * .7,
             child: ListView.separated(
                 itemBuilder: (context, index) => Container(
                     decoration: BoxDecoration(
@@ -47,8 +48,14 @@ class ProductPage extends StatelessWidget {
                         height: height * .3,
                         width: 100,
                       ),
-                      title: Text("CUFF EALTH "),
-                      subtitle: Text("₹ 12345"),
+                      title: Text(
+                          "CUFF EALTH ",
+                          style: poppinsStyle(FontWeight.w600, balck, 18),
+                        ),
+                        subtitle: Text(
+                          "₹ 12345",
+                          style: poppinsStyle(FontWeight.w500, balck, 18),
+                        ),
                       trailing: IconButton(
                           onPressed: () {}, icon: Icon(Icons.delete)),
                     )),

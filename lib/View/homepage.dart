@@ -5,6 +5,7 @@ import 'package:adminpanel_hardwarepro/View/pages/myshop.dart';
 import 'package:adminpanel_hardwarepro/View/pages/orders/order.dart';
 import 'package:adminpanel_hardwarepro/View/pages/products/product.dart';
 import 'package:adminpanel_hardwarepro/View/pages/wareenty/manage_warrenty.dart';
+import 'package:adminpanel_hardwarepro/View/profile.dart';
 import 'package:adminpanel_hardwarepro/utils/colors.dart';
 import 'package:adminpanel_hardwarepro/utils/style.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,6 +55,10 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(
                       width: width * .1,
                       child: ListTile(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const ProfilePage()));
+                        },
                         leading: const Icon(
                           CupertinoIcons.person_alt_circle_fill,
                           size: 30,
@@ -141,9 +146,8 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           InkWell(
                               onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ProductPage()));
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const ProductPage()));
                               },
                               child: menuItem(menuTitle[3], context)),
                           const SizedBox(
@@ -151,9 +155,8 @@ class HomeScreen extends StatelessWidget {
                           ),
                           InkWell(
                               onTap: () {
-                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const OrderPage()));
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => OrderPage()));
                               },
                               child: menuItem(menuTitle[4], context)),
                           const SizedBox(
@@ -161,9 +164,8 @@ class HomeScreen extends StatelessWidget {
                           ),
                           InkWell(
                               onTap: () {
-                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MyshopPage()));
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const MyshopPage()));
                               },
                               child: menuItem(menuTitle[5], context))
                         ],

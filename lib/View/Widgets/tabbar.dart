@@ -1,4 +1,6 @@
 import 'package:adminpanel_hardwarepro/View/Widgets/centerd_view.dart';
+import 'package:adminpanel_hardwarepro/View/homepage.dart';
+import 'package:adminpanel_hardwarepro/View/profile.dart';
 import 'package:adminpanel_hardwarepro/utils/colors.dart';
 import 'package:adminpanel_hardwarepro/utils/style.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +34,11 @@ class Tabbar extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (route) => false);
+                  },
                   icon: const Icon(
                     Icons.home_filled,
                     size: 30,
@@ -41,6 +47,10 @@ class Tabbar extends StatelessWidget {
               SizedBox(
                 width: width * .1,
                 child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ProfilePage()));
+                  },
                   leading: const Icon(
                     CupertinoIcons.person_alt_circle_fill,
                     size: 30,
