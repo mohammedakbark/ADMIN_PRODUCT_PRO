@@ -2,6 +2,7 @@ import 'package:adminpanel_hardwarepro/View/Widgets/centerd_view.dart';
 import 'package:adminpanel_hardwarepro/View/homepage.dart';
 import 'package:adminpanel_hardwarepro/View/profile.dart';
 import 'package:adminpanel_hardwarepro/utils/colors.dart';
+import 'package:adminpanel_hardwarepro/utils/objects.dart';
 import 'package:adminpanel_hardwarepro/utils/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +66,37 @@ class Tabbar extends StatelessWidget {
               SizedBox(
                 width: width * .1,
                 child: ListTile(
+                  onTap: () {
+                   showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            actionsAlignment: MainAxisAlignment.spaceEvenly,
+                            title: const Center(child: Text("Signout..?")),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    "No",
+                                    style: TextStyle(color: Colors.red),
+                                  )),
+                              TextButton(
+                                  onPressed: () {
+                                  
+                                    auth
+                                        .signOutFromMAil(context);
+                                  },
+                                  child: const Text(
+                                    "Yes",
+                                    style: TextStyle(color: Colors.green),
+                                  ))
+                            ],
+                          );
+                        },
+                      );
+                  },
                   leading: const Icon(
                     Icons.login_outlined,
                     size: 30,

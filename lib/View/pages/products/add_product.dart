@@ -1,8 +1,12 @@
 import 'package:adminpanel_hardwarepro/View/Widgets/navigate_to_previouse.dart';
+import 'package:adminpanel_hardwarepro/View/Widgets/show_message.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/tabbar.dart';
+import 'package:adminpanel_hardwarepro/ViewModel/controller.dart';
 import 'package:adminpanel_hardwarepro/utils/colors.dart';
 import 'package:adminpanel_hardwarepro/utils/style.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class AddProductPage extends StatelessWidget {
   AddProductPage({super.key});
@@ -74,16 +78,43 @@ class AddProductPage extends StatelessWidget {
                       SizedBox(
                         height: height * .03,
                       ),
-                      Container(
-                        height: height * .3,
-                        width: width * .2,
-                        decoration: BoxDecoration(
-                            color: white.withOpacity(.2),
-                            border: Border.all(width: .5),
-                            borderRadius: BorderRadius.circular(10),
-                            image: const DecorationImage(
-                                image: AssetImage("assets/pin.png"))),
-                      ),
+                      Consumer<Controller>(
+                          builder: (context, controller, child) {
+                        return InkWell(
+                          onTap: () async {
+                            PermissionStatus permission =
+                                await Permission.storage.request();
+                            if (permission.isGranted) {
+                              await controller.addProductImage();
+                            }
+                            // PermissionStatus galleryPermission =
+                            //     await Permission.storage.request();
+                            // if (galleryPermission.isGranted) {
+
+                            // } else {
+                            //   print(
+                            //       ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+                            // }
+                          },
+                          child: controller.isImageLoading1
+                              ? showIndicator()
+                              : Container(
+                                  height: height * .3,
+                                  width: width * .2,
+                                  decoration: BoxDecoration(
+                                      color: white.withOpacity(.2),
+                                      border: Border.all(width: .5),
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: controller.productImage1 == null
+                                          ? const DecorationImage(
+                                              image:
+                                                  AssetImage("assets/pin.png"))
+                                          : DecorationImage(
+                                              image: FileImage(
+                                                  controller.productImage1!))),
+                                ),
+                        );
+                      }),
                       SizedBox(
                         height: height * .25,
                       ),

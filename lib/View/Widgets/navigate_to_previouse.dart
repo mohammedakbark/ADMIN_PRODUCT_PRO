@@ -13,7 +13,8 @@ class NavigateToPreviouse extends StatelessWidget {
       {super.key,
       required this.title,
       this.isEnableButton,
-      this.additionalButtonTitle,this.page});
+      this.additionalButtonTitle,
+      this.page});
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +26,24 @@ class NavigateToPreviouse extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
+            // highlightColor: ,
+            hoverColor: Colors.transparent,
+
             onTap: () {
               Navigator.of(context).pop();
             },
-            child: SizedBox(
-              width: width * .2,
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.arrow_back_ios_new_outlined,
-                    color: balck,
-                    size: 30,
-                  ),
-                  Text(
-                    title,
-                    style: poppinsStyle(FontWeight.w600, balck, 20),
-                  )
-                ],
-              ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.arrow_back_ios_new_outlined,
+                  color: balck,
+                  size: 30,
+                ),
+                Text(
+                  title,
+                  style: poppinsStyle(FontWeight.w600, balck, 20),
+                )
+              ],
             ),
           ),
           isEnableButton == true
@@ -51,8 +52,8 @@ class NavigateToPreviouse extends StatelessWidget {
                   width: 300,
                   child: OutlinedButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => page));
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => page));
                       },
                       child: ListTile(
                         title: Text(

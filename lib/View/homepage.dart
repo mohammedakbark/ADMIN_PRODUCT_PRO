@@ -7,10 +7,10 @@ import 'package:adminpanel_hardwarepro/View/pages/products/product.dart';
 import 'package:adminpanel_hardwarepro/View/pages/wareenty/manage_warrenty.dart';
 import 'package:adminpanel_hardwarepro/View/profile.dart';
 import 'package:adminpanel_hardwarepro/utils/colors.dart';
+import 'package:adminpanel_hardwarepro/utils/objects.dart';
 import 'package:adminpanel_hardwarepro/utils/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -74,6 +74,35 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(
                       width: width * .1,
                       child: ListTile(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                actionsAlignment: MainAxisAlignment.spaceEvenly,
+                                title: const Center(child: Text("Signout..?")),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(
+                                        "No",
+                                        style: TextStyle(color: Colors.red),
+                                      )),
+                                  TextButton(
+                                      onPressed: () {
+                                        auth.signOutFromMAil(context);
+                                      },
+                                      child: const Text(
+                                        "Yes",
+                                        style: TextStyle(color: Colors.green),
+                                      ))
+                                ],
+                              );
+                            },
+                          );
+                        },
                         leading: const Icon(
                           Icons.login_outlined,
                           size: 30,
