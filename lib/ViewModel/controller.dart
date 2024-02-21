@@ -1,3 +1,4 @@
+import 'dart:html' as html;
 import 'dart:io';
 
 import 'package:adminpanel_hardwarepro/utils/objects.dart';
@@ -5,13 +6,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class Controller with ChangeNotifier{
+class Controller with ChangeNotifier {
   final firbaseStorage = FirebaseStorage.instance;
 
   File? productImage1;
   String? productImageURL1;
   bool isImageLoading1 = false;
-  Future addProductImage() async {
+  Future _addProductImage() async {
     isImageLoading1 = true;
     notifyListeners();
     // DocumentReference docUpdateRef =
@@ -34,5 +35,18 @@ class Controller with ChangeNotifier{
       notifyListeners();
       return productImageURL1;
     }
+  }
+
+  List<File>? files;
+  pickImage() {
+    isImageLoading1 = true;
+    notifyListeners();
+    html.FileUploadInputElement uploadInputElement =
+        html.FileUploadInputElement();
+    uploadInputElement.click();
+
+    uploadInputElement.onChange.listen((e) async {
+      final files = uploadInputElement.files;
+    });
   }
 }

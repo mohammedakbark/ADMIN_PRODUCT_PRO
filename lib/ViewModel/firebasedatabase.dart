@@ -1,3 +1,4 @@
+import 'package:adminpanel_hardwarepro/Model/productmodel.dart';
 import 'package:adminpanel_hardwarepro/Model/usermodel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,8 +7,17 @@ import 'package:flutter/cupertino.dart';
 
 class FirebaseDatabase with ChangeNotifier {
   final db = FirebaseFirestore.instance;
-  List<UserModel> userList = [];
+
+//-----------------------------------------add--
+
+  addProduct(ProductModel productModel) async {
+   final docs= db.collection("product").doc();
+   docs.set(productModel.toJson(docs.id));
+  }
+
   //-------------------------------------------fetch data
+  List<UserModel> userList = [];
+
   fetchAllUser() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await db.collection("User").get();

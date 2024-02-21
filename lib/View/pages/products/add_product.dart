@@ -82,19 +82,8 @@ class AddProductPage extends StatelessWidget {
                           builder: (context, controller, child) {
                         return InkWell(
                           onTap: () async {
-                            PermissionStatus permission =
-                                await Permission.storage.request();
-                            if (permission.isGranted) {
-                              await controller.addProductImage();
-                            }
-                            // PermissionStatus galleryPermission =
-                            //     await Permission.storage.request();
-                            // if (galleryPermission.isGranted) {
-
-                            // } else {
-                            //   print(
-                            //       ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-                            // }
+                            controller.pickImage();
+                            // requestStoragePermission();
                           },
                           child: controller.isImageLoading1
                               ? showIndicator()
@@ -181,5 +170,26 @@ class AddProductPage extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+void requestStoragePermission() async {
+  // Request the permission
+  PermissionStatus status = await Permission.storage.request();
+
+  // Check the permission status
+  if (status.isGranted) {
+    print("111111111111111111111111");
+    // Permission granted
+    print("Storage permission granted");
+  } else if (status.isDenied) {
+    print("222222222222222222222222222222");
+    // Permission denied
+    print("Storage permission denied");
+  } else if (status.isPermanentlyDenied) {
+    print("33333333333333333333333333333333");
+    // Permission permanently denied
+    // Open app settings to allow the user to grant the permission
+    openAppSettings();
   }
 }
