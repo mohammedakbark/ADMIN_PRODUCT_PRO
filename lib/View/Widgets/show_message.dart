@@ -58,7 +58,13 @@ showSuccessMessage(context, String message) {
     backgroundColor: const Color.fromARGB(255, 0, 169, 6),
   ));
 }
-
+showErrorMessage(context, String message) {
+  return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    behavior: SnackBarBehavior.floating,
+    content: Text(message),
+    backgroundColor: Color.fromARGB(255, 169, 0, 0),
+  ));
+}
 customeShowDiolog(String title, BuildContext context) {
   showDialog(
     context: context,

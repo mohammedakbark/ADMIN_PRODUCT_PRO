@@ -1,52 +1,133 @@
-import 'dart:html' as html;
+import 'dart:html';
 import 'dart:io';
 
-import 'package:adminpanel_hardwarepro/utils/objects.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Controller with ChangeNotifier {
   final firbaseStorage = FirebaseStorage.instance;
-
-  File? productImage1;
+  // File? pickedFile
   String? productImageURL1;
   bool isImageLoading1 = false;
-  Future _addProductImage() async {
+  Uint8List? imageBytes;
+  Blob? blob;
+  SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
+  uploadFile() async {
     isImageLoading1 = true;
     notifyListeners();
-    // DocumentReference docUpdateRef =
-    //     db.collection('user').doc(FirebaseAuth.instance.currentUser!.uid);
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
-    if (pickedFile != null) {
-      final currenttime = TimeOfDay.now();
-      productImage1 = File(pickedFile.path);
-      UploadTask uploadTask = firbaseStorage
-          .ref()
-          .child("ProductImage/$currenttime")
-          .putFile(productImage1!, metadata);
-      TaskSnapshot snapshot = await uploadTask;
-      productImageURL1 = await snapshot.ref.getDownloadURL();
-      // docUpdateRef.update({"profileImage": downloadURL}).then(
-      //     (value) => noti("Profile Image Updated"));
-      isImageLoading1 = false;
-      notifyListeners();
-      return productImageURL1;
-    }
+    FileUploadInputElement input = FileUploadInputElement()..accept = 'image/*';
+    input.click();
+    input.onChange.listen((event) {
+      final file = input.files?.first;
+      if (file != null) {
+        final reader = FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onLoadEnd.listen((event) async {
+          Uint8List data = Uint8List.fromList(reader.result as List<int>);
+
+          imageBytes = data;
+
+          blob = Blob([data]);
+          isImageLoading1 = false;
+          notifyListeners();
+          try {
+            const currenttime = DateTime.now;
+
+            UploadTask uploadedTask = firbaseStorage
+                .ref()
+                .child("ProductImage/$currenttime")
+                .putBlob(blob, metadata);
+            TaskSnapshot snapshot = await uploadedTask;
+            productImageURL1 = await snapshot.ref.getDownloadURL();
+            print(productImageURL1);
+          } catch (error) {
+            print('Error uploading image to Firebase Storage: $error');
+          }
+        });
+      }
+    });
+  }
+  // final picker = ImagePicker();
+
+  // Future addProductImage() async {
+  //   isImageLoading1 = true;
+  //   notifyListeners();
+
+  //   final pickedData = await picker.pickImage(source: ImageSource.gallery);
+  //   SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
+  //   if (pickedData != null) {
+  //     pickedFile = File(pickedData.path);
+  //     print(pickedData.path);
+  //     print(pickedFile);
+
+  //     final currenttime = TimeOfDay.now();
+  //     UploadTask uploadTask = firbaseStorage
+  //         .ref()
+  //         .child("ProductImage/$currenttime")
+  //         .putFile(pickedFile!, metadata);
+
+  //     TaskSnapshot snapshot = await uploadTask;
+  //     productImageURL1 = await snapshot.ref.getDownloadURL();
+  //   } else {
+  //     print("Image Not Picked");
+  //   }
+
+  //   isImageLoading1 = false;
+  //   notifyListeners();
+  //   return pickedFile!.path;
+  //   // // return productImageURL1;
+  // }
+
+  // File? imageFile;
+
+  fetchImage() {
+    isImageLoading1 = true;
+    notifyListeners();
+    FileUploadInputElement input = FileUploadInputElement()..accept = 'image/*';
+
+    input.click();
+
+    input.onChange.listen((event) {
+      final file = input.files?.first;
+      if (file != null) {
+        final reader = FileReader();
+
+        reader.readAsArrayBuffer(file);
+
+        reader.onLoadEnd.listen((event) {
+          Uint8List data = Uint8List.fromList(reader.result as List<int>);
+
+          imageBytes = data;
+          notifyListeners();
+          print("--------------------");
+          print(imageBytes);
+          blob = Blob([data]);
+          print(blob);
+          isImageLoading1 = false;
+          notifyListeners();
+          saveToStore();
+        });
+      }
+    });
   }
 
-  List<File>? files;
-  pickImage() {
-    isImageLoading1 = true;
-    notifyListeners();
-    html.FileUploadInputElement uploadInputElement =
-        html.FileUploadInputElement();
-    uploadInputElement.click();
+  saveToStore() async {
+    try {
+      final currenttime = TimeOfDay.now();
 
-    uploadInputElement.onChange.listen((e) async {
-      final files = uploadInputElement.files;
-    });
+      var snapshot = await firbaseStorage
+          .ref()
+          .child("ProductImage/$currenttime")
+          .putBlob(blob);
+
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+
+      productImageURL1 = downloadUrl;
+      print("=====${productImageURL1}====");
+      print(downloadUrl);
+    } catch (error) {
+      print('Error uploading image to Firebase Storage: $error');
+    }
   }
 }

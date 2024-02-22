@@ -1,10 +1,13 @@
+import 'package:adminpanel_hardwarepro/Model/productmodel.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/navigate_to_previouse.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/show_message.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/tabbar.dart';
 import 'package:adminpanel_hardwarepro/ViewModel/controller.dart';
 import 'package:adminpanel_hardwarepro/utils/colors.dart';
+import 'package:adminpanel_hardwarepro/utils/objects.dart';
 import 'package:adminpanel_hardwarepro/utils/style.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +19,8 @@ class AddProductPage extends StatelessWidget {
   final productFeatureController = TextEditingController();
   final offersController = TextEditingController();
   final categoryController = TextEditingController();
+  String? path;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -23,129 +28,217 @@ class AddProductPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: appBgColor,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Tabbar(),
-            SizedBox(
-              height: height * .08,
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: NavigateToPreviouse(
-                title: "Add Products",
-                isEnableButton: false,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const Tabbar(),
+              SizedBox(
+                height: height * .08,
               ),
-            ),
-            SizedBox(
-              height: height * .05,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: width * .4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      customeTextField(
-                          "Product Name", productNameController, height),
-                      customeTextField("Price", priceController, height),
-                      customeTextField("Product description",
-                          productDescriptionController, height),
-                      customeTextField(
-                          "Product features", productFeatureController, height),
-                      customeTextField("Offers", offersController, height),
-                      customeTextField("Category", categoryController, height)
-                    ],
-                  ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: NavigateToPreviouse(
+                  title: "Add Products",
+                  isEnableButton: false,
                 ),
-                Container(
-                  decoration: BoxDecoration(color: lightGrey.withOpacity(.5)),
-                  width: 3,
-                  height: height * .4,
-                ),
-                SizedBox(
-                  width: width * .2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        "Add image here",
-                        style: poppinsStyle(FontWeight.w500, balck, 18),
-                      ),
-                      SizedBox(
-                        height: height * .03,
-                      ),
-                      Consumer<Controller>(
-                          builder: (context, controller, child) {
-                        return InkWell(
-                          onTap: () async {
-                            controller.pickImage();
-                            // requestStoragePermission();
-                          },
-                          child: controller.isImageLoading1
-                              ? showIndicator()
-                              : Container(
-                                  height: height * .3,
-                                  width: width * .2,
-                                  decoration: BoxDecoration(
-                                      color: white.withOpacity(.2),
-                                      border: Border.all(width: .5),
-                                      borderRadius: BorderRadius.circular(10),
-                                      image: controller.productImage1 == null
-                                          ? const DecorationImage(
-                                              image:
-                                                  AssetImage("assets/pin.png"))
-                                          : DecorationImage(
-                                              image: FileImage(
-                                                  controller.productImage1!))),
-                                ),
-                        );
-                      }),
-                      SizedBox(
-                        height: height * .25,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          // Expanded(child: SizedBox()),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: darkGreen),
-                              onPressed: () {},
-                              child: Text(
-                                "Submit",
-                                style: poppinsStyle(FontWeight.w500, white, 15),
-                              )),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 97, 96, 96)),
-                              onPressed: () {},
-                              child: Text(
-                                "Cancel",
-                                style: poppinsStyle(FontWeight.w500, white, 15),
-                              )),
-                        ],
-                      ),
-                    ],
+              ),
+              SizedBox(
+                height: height * .05,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: width * .4,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        customeTextField(
+                            "Product Name", productNameController, height,
+                            validator: (value) {
+                          if (value!.isEmpty) {
+                            return "field is required";
+                          } else {
+                            return null;
+                          }
+                        }),
+                        customeTextField("Price", priceController, height,
+                            validator: (value) {
+                          if (value!.isEmpty) {
+                            return "field is required";
+                          } else {
+                            return null;
+                          }
+                        }),
+                        customeTextField(
+                            "Product description",
+                            productDescriptionController,
+                            height, validator: (value) {
+                          if (value!.isEmpty) {
+                            return "field is required";
+                          } else {
+                            return null;
+                          }
+                        }),
+                        customeTextField(
+                            "Product features",
+                            productFeatureController,
+                            height, validator: (value) {
+                          if (value!.isEmpty) {
+                            return "field is required";
+                          } else {
+                            return null;
+                          }
+                        }),
+                        customeTextField("Offers", offersController, height,
+                            validator: (value) {
+                          if (value!.isEmpty) {
+                            return "field is required";
+                          } else {
+                            return null;
+                          }
+                        }),
+                        customeTextField("Category", categoryController, height,
+                            validator: (value) {
+                          if (value!.isEmpty) {
+                            return "field is required";
+                          } else {
+                            return null;
+                          }
+                        }),
+                      ],
+                    ),
                   ),
-                )
-              ],
-            )
-          ],
+                  Container(
+                    decoration: BoxDecoration(color: lightGrey.withOpacity(.5)),
+                    width: 3,
+                    height: height * .4,
+                  ),
+                  SizedBox(
+                    width: width * .2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Add image here",
+                          style: poppinsStyle(FontWeight.w500, balck, 18),
+                        ),
+                        SizedBox(
+                          height: height * .03,
+                        ),
+                        Consumer<Controller>(
+                            builder: (context, controller, child) {
+                          return InkWell(
+                            onTap: () async {
+                              await controller.uploadFile();
+
+                              // requestStoragePermission();
+                            },
+                            child: controller.isImageLoading1
+                                ? showIndicator()
+                                : Container(
+                                    height: height * .3,
+                                    width: width * .2,
+                                    decoration: BoxDecoration(
+                                        color: white.withOpacity(.2),
+                                        border: Border.all(width: .5),
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: controller.blob == null
+                                            ? const DecorationImage(
+                                                image: AssetImage(
+                                                    "assets/pin.png"))
+                                            : DecorationImage(
+                                                image: MemoryImage(
+                                                    controller.imageBytes!))),
+                                  ),
+                          );
+                        }),
+                        SizedBox(
+                          height: height * .25,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            // Expanded(child: SizedBox()),
+                            Consumer<Controller>(
+                                builder: (context, ctlr, child) {
+                              return ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: darkGreen),
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      if (ctlr.blob != null) {
+                                        try {
+                                          await firebaseDatabase.addProduct(
+                                              ProductModel(
+                                                  productImage:
+                                                      "${ctlr.productImageURL1}",
+                                                  category:
+                                                      categoryController.text,
+                                                  offer: offersController.text,
+                                                  price: priceController.text,
+                                                  prodcutDescription:
+                                                      productDescriptionController
+                                                          .text,
+                                                  productName:
+                                                      productNameController
+                                                          .text,
+                                                  productfeature:
+                                                      productFeatureController
+                                                          .text),context);
+                                        } catch (e) {
+                                          throw showErrorMessage(context, "$e");
+                                        }
+                                      } else {
+                                        return showErrorMessage(
+                                            context, "Pick Image");
+                                      }
+                                    }
+                                  },
+                                  child: Text(
+                                    "Submit",
+                                    style: poppinsStyle(
+                                        FontWeight.w500, white, 15),
+                                  ));
+                            }),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 97, 96, 96)),
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                },
+                                child: Text(
+                                  "Cancel",
+                                  style:
+                                      poppinsStyle(FontWeight.w500, white, 15),
+                                )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget customeTextField(
-      String title, TextEditingController controller, double height) {
+    String title,
+    TextEditingController controller,
+    double height, {
+    String? Function(String?)? validator,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -154,6 +247,7 @@ class AddProductPage extends StatelessWidget {
           style: poppinsStyle(FontWeight.w500, balck, 18),
         ),
         TextFormField(
+          validator: validator,
           controller: controller,
           decoration: InputDecoration(
               filled: true,

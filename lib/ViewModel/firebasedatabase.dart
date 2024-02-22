@@ -1,5 +1,6 @@
 import 'package:adminpanel_hardwarepro/Model/productmodel.dart';
 import 'package:adminpanel_hardwarepro/Model/usermodel.dart';
+import 'package:adminpanel_hardwarepro/View/Widgets/show_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,9 +11,17 @@ class FirebaseDatabase with ChangeNotifier {
 
 //-----------------------------------------add--
 
-  addProduct(ProductModel productModel) async {
-   final docs= db.collection("product").doc();
-   docs.set(productModel.toJson(docs.id));
+  Future addProduct(ProductModel productModel, context) async {
+    final docs = db.collection("product").doc();
+    docs.set(productModel.toJson(docs.id)).then((v) {
+      showSuccessMessage(context, "Product added successfully");
+      Navigator.of(context).pop();
+      notifyListeners();
+    });
+  }
+
+  listen() {
+    notifyListeners();
   }
 
   //-------------------------------------------fetch data
@@ -24,6 +33,15 @@ class FirebaseDatabase with ChangeNotifier {
 
     userList = snapshot.docs.map((e) {
       return UserModel.fromJson(e.data());
+    }).toList();
+  }
+
+  List<ProductModel> productList = [];
+  Future fetchAllProduct() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await db.collection("product").get();
+    productList = snapshot.docs.map((e) {
+      return ProductModel.fromJson(e.data());
     }).toList();
   }
 
@@ -49,5 +67,10 @@ class FirebaseDatabase with ChangeNotifier {
         await doc.reference.delete();
       }
     }
+  }
+
+  deleteSelectedProduct(proId) {
+    db.collection("product").doc(proId).delete();
+    notifyListeners();
   }
 }

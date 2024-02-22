@@ -1,5 +1,5 @@
 class ProductModel {
-  String productId;
+  String ?productId;
   String productName;
   String price;
   String prodcutDescription;
@@ -8,7 +8,7 @@ class ProductModel {
   String category;
   String productImage;
   ProductModel(
-      {required this.productId,
+      {this.productId,
       required this.productImage,
       required this.category,
       required this.offer,

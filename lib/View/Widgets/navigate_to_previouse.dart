@@ -53,7 +53,10 @@ class NavigateToPreviouse extends StatelessWidget {
                   child: OutlinedButton(
                       onPressed: () {
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => page));
+
+                            MaterialPageRoute(
+                              
+                              builder: (context) => page));
                       },
                       child: ListTile(
                         title: Text(
