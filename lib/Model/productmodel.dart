@@ -1,10 +1,10 @@
 class ProductModel {
   String ?productId;
   String productName;
-  String price;
+  double price;
   String prodcutDescription;
   String productfeature;
-  String offer;
+  double offer;
   String category;
   String productImage;
   ProductModel(

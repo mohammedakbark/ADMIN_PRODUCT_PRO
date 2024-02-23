@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adminpanel_hardwarepro/Model/productmodel.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/navigate_to_previouse.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/show_message.dart';
@@ -13,13 +15,14 @@ import 'package:provider/provider.dart';
 
 class AddProductPage extends StatelessWidget {
   AddProductPage({super.key});
+  RegExp regex = RegExp(r'^\d+$');
   final productNameController = TextEditingController();
   final priceController = TextEditingController();
   final productDescriptionController = TextEditingController();
   final productFeatureController = TextEditingController();
   final offersController = TextEditingController();
   final categoryController = TextEditingController();
-  String? path;
+  String? uRL;
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -68,6 +71,8 @@ class AddProductPage extends StatelessWidget {
                             validator: (value) {
                           if (value!.isEmpty) {
                             return "field is required";
+                          } else if (!(regex.hasMatch(value))) {
+                            return "only contain numeric";
                           } else {
                             return null;
                           }
@@ -96,6 +101,8 @@ class AddProductPage extends StatelessWidget {
                             validator: (value) {
                           if (value!.isEmpty) {
                             return "field is required";
+                          } else if (!(regex.hasMatch(value))) {
+                            return "only contain numeric";
                           } else {
                             return null;
                           }
@@ -133,27 +140,27 @@ class AddProductPage extends StatelessWidget {
                             builder: (context, controller, child) {
                           return InkWell(
                             onTap: () async {
-                              await controller.uploadFile();
+                              await controller.pickImageinWeb();
 
                               // requestStoragePermission();
                             },
-                            child: controller.isImageLoading1
+                            child: controller.processingImage
                                 ? showIndicator()
                                 : Container(
                                     height: height * .3,
                                     width: width * .2,
                                     decoration: BoxDecoration(
-                                        color: white.withOpacity(.2),
-                                        border: Border.all(width: .5),
-                                        borderRadius: BorderRadius.circular(10),
-                                        image: controller.blob == null
-                                            ? const DecorationImage(
-                                                image: AssetImage(
-                                                    "assets/pin.png"))
-                                            : DecorationImage(
-                                                image: MemoryImage(
-                                                    controller.imageBytes!))),
-                                  ),
+                                      color: white.withOpacity(.2),
+                                      border: Border.all(width: .5),
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: controller.blob == null
+                                          ? const DecorationImage(
+                                              image:
+                                                  AssetImage("assets/pin.png"))
+                                          : DecorationImage(
+                                              image: MemoryImage(
+                                                  controller.imageBytes!)),
+                                    )),
                           );
                         }),
                         SizedBox(
@@ -172,14 +179,17 @@ class AddProductPage extends StatelessWidget {
                                     if (_formKey.currentState!.validate()) {
                                       if (ctlr.blob != null) {
                                         try {
+                                          double pricee = double.parse(
+                                              priceController.text);
+                                          double off = double.parse(
+                                              offersController.text);
                                           await firebaseDatabase.addProduct(
                                               ProductModel(
-                                                  productImage:
-                                                      "${ctlr.productImageURL1}",
+                                                  productImage:ctlr.imageurl!,
                                                   category:
                                                       categoryController.text,
-                                                  offer: offersController.text,
-                                                  price: priceController.text,
+                                                  offer: off,
+                                                  price: pricee,
                                                   prodcutDescription:
                                                       productDescriptionController
                                                           .text,
@@ -188,7 +198,8 @@ class AddProductPage extends StatelessWidget {
                                                           .text,
                                                   productfeature:
                                                       productFeatureController
-                                                          .text),context);
+                                                          .text),
+                                              context);
                                         } catch (e) {
                                           throw showErrorMessage(context, "$e");
                                         }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:adminpanel_hardwarepro/View/Widgets/navigate_to_previouse.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/show_message.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/tabbar.dart';
@@ -51,39 +53,42 @@ class ProductPage extends StatelessWidget {
                           width: width * .5,
                           height: height * .7,
                           child: ListView.separated(
-                              itemBuilder: (context, index) => Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(width: .5),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: ListTile(
-                                    leading: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          image: DecorationImage(
-                                              scale: 2,
-                                              image: NetworkImage(
-                                                  data[index].productImage))),
-                                      height: height * .3,
-                                      width: 100,
+                              itemBuilder: (context, index) {
+                                print(data[index].productImage);
+                                print("----------------");
+                                return Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(width: .5),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                    title: Text(
-                                      data[index].productName.toUpperCase(),
-                                      style: poppinsStyle(
-                                          FontWeight.w600, balck, 18),
-                                    ),
-                                    subtitle: Text(
-                                      "₹ ${data[index].price}",
-                                      style: poppinsStyle(
-                                          FontWeight.w500, balck, 18),
-                                    ),
-                                    trailing: IconButton(
-                                        onPressed: () {
-                                          store.deleteSelectedProduct(
-                                              data[index].productId);
-                                        },
-                                        icon: const Icon(Icons.delete)),
-                                  )),
+                                    child: ListTile(
+                                      leading: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                    data[index].productImage))),
+                                        height: height * .3,
+                                        width: 100,
+                                      ),
+                                      title: Text(
+                                        data[index].productName.toUpperCase(),
+                                        style: poppinsStyle(
+                                            FontWeight.w600, balck, 18),
+                                      ),
+                                      subtitle: Text(
+                                        "₹ ${data[index].price}",
+                                        style: poppinsStyle(
+                                            FontWeight.w500, balck, 18),
+                                      ),
+                                      trailing: IconButton(
+                                          onPressed: () {
+                                            store.deleteSelectedProduct(
+                                                data[index].productId);
+                                          },
+                                          icon: const Icon(Icons.delete)),
+                                    ));
+                              },
                               separatorBuilder: (context, index) =>
                                   const SizedBox(
                                     height: 20,
