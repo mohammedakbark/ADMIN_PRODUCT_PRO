@@ -64,7 +64,6 @@ class ProductPage extends StatelessWidget {
                                     child: ListTile(
                                       leading: Container(
                                         decoration: BoxDecoration(
-                                            color: Colors.red,
                                             image: DecorationImage(
                                                 image: NetworkImage(
                                                     data[index].productImage))),

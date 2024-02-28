@@ -1,9 +1,11 @@
+import 'package:adminpanel_hardwarepro/Model/order_model.dart';
 import 'package:adminpanel_hardwarepro/Model/productmodel.dart';
 import 'package:adminpanel_hardwarepro/Model/usermodel.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/show_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
 class FirebaseDatabase with ChangeNotifier {
@@ -45,6 +47,14 @@ class FirebaseDatabase with ChangeNotifier {
     }).toList();
   }
 
+  List<OrderModel> orderList = [];
+  fetchOrders(status) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await db.collection('Orders').get();
+    orderList =
+        snapshot.docs.map((e) => OrderModel.fromJson(e.data())).toList();
+  }
+
   //--------------------------------------------delete data
 
   deleteUser(docId) async {
@@ -73,4 +83,16 @@ class FirebaseDatabase with ChangeNotifier {
     db.collection("product").doc(proId).delete();
     notifyListeners();
   }
+
+  //--------------------------update
+
+  // updateStatus(
+  //   updatedStatus,
+  //   docId,
+  //   index,
+  // ) async {
+  //   final collectionRef = db.collection("Orders").doc(docId);
+  //   collectionRef.update();
+  //   notifyListeners();
+  // }
 }
