@@ -1,3 +1,4 @@
+import 'package:adminpanel_hardwarepro/Model/notification-model.dart';
 import 'package:adminpanel_hardwarepro/Model/order_model.dart';
 import 'package:adminpanel_hardwarepro/Model/productmodel.dart';
 import 'package:adminpanel_hardwarepro/Model/usermodel.dart';
@@ -26,6 +27,12 @@ class FirebaseDatabase with ChangeNotifier {
     notifyListeners();
   }
 
+  _sendNotificationToUser(uid, NotificationModel notificationModel) async {
+    final docs =
+        db.collection("User").doc(uid).collection("Notification").doc();
+    docs.set(notificationModel.tojson(docs.id));
+  }
+
   //-------------------------------------------fetch data
   List<UserModel> userList = [];
 
@@ -50,7 +57,7 @@ class FirebaseDatabase with ChangeNotifier {
   List<OrderModel> orderList = [];
   fetchOrders(status) async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
-        await db.collection('Orders').get();
+        await db.collection('Orders').where("status", isEqualTo: status).get();
     orderList =
         snapshot.docs.map((e) => OrderModel.fromJson(e.data())).toList();
   }
@@ -86,13 +93,9 @@ class FirebaseDatabase with ChangeNotifier {
 
   //--------------------------update
 
-  // updateStatus(
-  //   updatedStatus,
-  //   docId,
-  //   index,
-  // ) async {
-  //   final collectionRef = db.collection("Orders").doc(docId);
-  //   collectionRef.update();
-  //   notifyListeners();
-  // }
+ Future updateStatus(updatedStatus, docId, uid, notificationModel) async {
+    db.collection("Orders").doc(docId).update({"status": updatedStatus});
+    _sendNotificationToUser(uid, notificationModel);
+    notifyListeners();
+  }
 }

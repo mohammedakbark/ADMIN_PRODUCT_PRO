@@ -1,3 +1,4 @@
+import 'package:adminpanel_hardwarepro/Model/notification-model.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/navigate_to_previouse.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/show_message.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/tabbar.dart';
@@ -9,11 +10,13 @@ import 'package:adminpanel_hardwarepro/utils/style.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class OrderPage extends StatelessWidget {
   OrderPage({super.key});
-
+  String time = DateFormat('h:mm a').format(DateTime.now());
+  String date = DateFormat("dd/m/yyyy").format(DateTime.now());
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -103,6 +106,7 @@ class OrderPage extends StatelessWidget {
                                           FontWeight.w600, balck, 20),
                                     ),
                                   ),
+                                  Text(data[indexOrder].uid ?? "null"),
                                   Text(
                                       "Order Id :${data[indexOrder].orderId?.substring(data[indexOrder].orderId!.length - 8)}"),
                                   Text(
@@ -195,57 +199,70 @@ class OrderPage extends StatelessWidget {
                                               SizedBox(
                                                 height: height * .02,
                                               ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  // Expanded(child: SizedBox()),
-                                                  ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                              backgroundColor:
-                                                                  darkGreen),
-                                                      onPressed: () {
-                                                        // fire.updateStatus(
-                                                        //     'COMPLETED',
-                                                        //     data[indexOrder]
-                                                        //         .orderId,
-                                                        //     indexcart);
-                                                      },
-                                                      child: Text(
-                                                        "Approve",
-                                                        style: poppinsStyle(
-                                                            FontWeight.w500,
-                                                            white,
-                                                            15),
-                                                      )),
-                                                  const SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                              backgroundColor:
-                                                                  darkRed),
-                                                      onPressed: () {
-                                                        // fire.updateStatus(
-                                                        //     'REJECTED',
-                                                        //     data[indexOrder]
-                                                        //         .orderId,
-                                                        //     indexcart);
-                                                      },
-                                                      child: Text(
-                                                        "Reject",
-                                                        style: poppinsStyle(
-                                                            FontWeight.w500,
-                                                            white,
-                                                            15),
-                                                      )),
-                                                ],
-                                              ),
                                             ],
                                           );
                                         }),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      // Expanded(child: SizedBox()),
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: darkGreen),
+                                          onPressed: () {
+                                            fire
+                                                .updateStatus(
+                                                    'COMPLETED',
+                                                    data[indexOrder].orderId,
+                                                    data[indexOrder].uid,
+                                                    NotificationModel(
+                                                        notification:
+                                                            "Your order (Order Id :${data[indexOrder].orderId!.substring(data[indexOrder].orderId!.length - 8)}) is approved ,it will be deliver soon..",
+                                                        // uid: data[indexOrder]
+                                                        //     .uid!,
+                                                        date: date,
+                                                        time: time))
+                                                .then((value) {
+                                              showSuccessMessage(context,
+                                                  "Order updated successful");
+                                            });
+                                          },
+                                          child: Text(
+                                            "Approve",
+                                            style: poppinsStyle(
+                                                FontWeight.w500, white, 15),
+                                          )),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: darkRed),
+                                          onPressed: () {
+                                            fire
+                                                .updateStatus(
+                                                    'REJECTED',
+                                                    data[indexOrder].orderId,
+                                                    data[indexOrder].uid,
+                                                    NotificationModel(
+                                                        notification:
+                                                            "Your order (Order Id :${data[indexOrder].orderId!.substring(data[indexOrder].orderId!.length - 8)}) is rejected by some reason .",
+                                                        // uid: data[indexOrder]
+                                                        //     .uid!,
+                                                        date: date,
+                                                        time: time))
+                                                .then((value) {
+                                              showSuccessMessage(context,
+                                                  "Order updated successful");
+                                            });
+                                          },
+                                          child: Text(
+                                            "Reject",
+                                            style: poppinsStyle(
+                                                FontWeight.w500, white, 15),
+                                          )),
+                                    ],
                                   ),
                                 ],
                               );
