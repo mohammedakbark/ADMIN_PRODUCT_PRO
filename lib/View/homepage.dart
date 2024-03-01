@@ -163,7 +163,7 @@ class HomeScreen extends StatelessWidget {
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
-                                        const ManageWarrenty()));
+                                         ManageWarrenty()));
                               },
                               child: menuItem(menuTitle[2], context))
                         ],

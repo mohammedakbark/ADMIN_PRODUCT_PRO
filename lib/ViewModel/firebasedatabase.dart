@@ -64,15 +64,28 @@ class FirebaseDatabase with ChangeNotifier {
   }
 
   List<RegisterWarrentyModel> warrentyList = [];
-  fetchAllPendingWarrenty() async {
+  fetchAllWarrenty() async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await db
         .collection("Warrenty")
-        .where("warrentyStatus", isEqualTo: "PENDING")
+        // .where("warrentyStatus", isNotEqualTo: "APPROVED")
         .get();
     warrentyList = snapshot.docs
         .map((e) => RegisterWarrentyModel.fromjson(e.data()))
         .toList();
     print(warrentyList.length);
+  }
+
+  List<RegisterWarrentyModel> claimedWarrentyList = [];
+  fetchClaimedWarrentyforConfirm() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await db
+        .collection("Warrenty")
+        .where("claimStatus", isNotEqualTo: "NOT")
+        .get();
+    claimedWarrentyList = snapshot.docs
+        .map((e) => RegisterWarrentyModel.fromjson(e.data()))
+        .toList();
+
+    print(claimedWarrentyList.length);
   }
 
   String proImage = "";
@@ -122,8 +135,16 @@ class FirebaseDatabase with ChangeNotifier {
     notifyListeners();
   }
 
-  updateWarrentyStatus(docId, newStatus) async {
+  updateWarrentyStatus(docId, newStatus, uid, notificationModel) async {
     db.collection("Warrenty").doc(docId).update({"warrentyStatus": newStatus});
+    _sendNotificationToUser(uid, notificationModel);
+    notifyListeners();
+  }
+
+  updateClaimStatus(
+      docId, newStatus, uid, NotificationModel notificationModel) async {
+    db.collection('Warrenty').doc(docId).update({"claimStatus": newStatus});
+    _sendNotificationToUser(uid, notificationModel);
     notifyListeners();
   }
 }

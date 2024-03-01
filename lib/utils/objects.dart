@@ -5,3 +5,4 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 Auth auth = Auth();
 FirebaseDatabase firebaseDatabase = FirebaseDatabase();
+//product id is the confirmation id for completing the warrenty calimimg prodedure
