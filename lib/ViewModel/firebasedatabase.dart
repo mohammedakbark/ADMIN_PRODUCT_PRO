@@ -2,6 +2,7 @@ import 'package:adminpanel_hardwarepro/Model/notification-model.dart';
 import 'package:adminpanel_hardwarepro/Model/order_model.dart';
 import 'package:adminpanel_hardwarepro/Model/productmodel.dart';
 import 'package:adminpanel_hardwarepro/Model/usermodel.dart';
+import 'package:adminpanel_hardwarepro/Model/warrenty_reg_model.dart';
 import 'package:adminpanel_hardwarepro/View/Widgets/show_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,6 +63,28 @@ class FirebaseDatabase with ChangeNotifier {
         snapshot.docs.map((e) => OrderModel.fromJson(e.data())).toList();
   }
 
+  List<RegisterWarrentyModel> warrentyList = [];
+  fetchAllPendingWarrenty() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await db
+        .collection("Warrenty")
+        .where("warrentyStatus", isEqualTo: "PENDING")
+        .get();
+    warrentyList = snapshot.docs
+        .map((e) => RegisterWarrentyModel.fromjson(e.data()))
+        .toList();
+    print(warrentyList.length);
+  }
+
+  String proImage = "";
+  fetchSelectedProductImage(proId) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await db.collection("product").doc(proId).get();
+    if (snapshot.exists) {
+      Map<String, dynamic> data = snapshot.data()!;
+      print(data);
+      proImage = data["productImage"];
+    }
+  }
   //--------------------------------------------delete data
 
   deleteUser(docId) async {
@@ -93,9 +116,14 @@ class FirebaseDatabase with ChangeNotifier {
 
   //--------------------------update
 
- Future updateStatus(updatedStatus, docId, uid, notificationModel) async {
+  Future updateStatus(updatedStatus, docId, uid, notificationModel) async {
     db.collection("Orders").doc(docId).update({"status": updatedStatus});
     _sendNotificationToUser(uid, notificationModel);
+    notifyListeners();
+  }
+
+  updateWarrentyStatus(docId, newStatus) async {
+    db.collection("Warrenty").doc(docId).update({"warrentyStatus": newStatus});
     notifyListeners();
   }
 }
