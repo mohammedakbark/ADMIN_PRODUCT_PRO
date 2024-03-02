@@ -1,3 +1,4 @@
+import 'package:adminpanel_hardwarepro/Model/complaint_model.dart';
 import 'package:adminpanel_hardwarepro/Model/notification-model.dart';
 import 'package:adminpanel_hardwarepro/Model/order_model.dart';
 import 'package:adminpanel_hardwarepro/Model/productmodel.dart';
@@ -98,6 +99,29 @@ class FirebaseDatabase with ChangeNotifier {
       proImage = data["productImage"];
     }
   }
+
+  List<RegisterComplaintModel> complaintList = [];
+  fetchAllComplaints() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await db.collection("Complaints").get();
+    complaintList = snapshot.docs
+        .map((e) => RegisterComplaintModel.formJson(e.data()))
+        .toList();
+  }
+
+  String userName = "";
+  String email = "";
+  fetchSelectedUSerName(uid) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await db.collection("User").doc(uid).get();
+    if (snapshot.exists) {
+      final data = snapshot.data();
+      userName = data!["userName"];
+      email = data["email"];
+      print(userName);
+      print("============");
+    }
+  }
   //--------------------------------------------delete data
 
   deleteUser(docId) async {
@@ -144,6 +168,16 @@ class FirebaseDatabase with ChangeNotifier {
   updateClaimStatus(
       docId, newStatus, uid, NotificationModel notificationModel) async {
     db.collection('Warrenty').doc(docId).update({"claimStatus": newStatus});
+    _sendNotificationToUser(uid, notificationModel);
+    notifyListeners();
+  }
+
+  updateComplaintStatus(
+      docId, newStatus, uid, NotificationModel notificationModel) {
+    db
+        .collection("Complaints")
+        .doc(docId)
+        .update({"complaintStatus": newStatus});
     _sendNotificationToUser(uid, notificationModel);
     notifyListeners();
   }

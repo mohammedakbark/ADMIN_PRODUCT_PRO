@@ -152,8 +152,7 @@ class HomeScreen extends StatelessWidget {
                           InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ManageComplaints()));
+                                    builder: (context) => ManageComplaints()));
                               },
                               child: menuItem(menuTitle[1], context)),
                           const SizedBox(
@@ -162,8 +161,7 @@ class HomeScreen extends StatelessWidget {
                           InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                         ManageWarrenty()));
+                                    builder: (context) => ManageWarrenty()));
                               },
                               child: menuItem(menuTitle[2], context))
                         ],
@@ -194,7 +192,7 @@ class HomeScreen extends StatelessWidget {
                           InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const MyshopPage()));
+                                    builder: (context) => MyshopPage()));
                               },
                               child: menuItem(menuTitle[5], context))
                         ],
